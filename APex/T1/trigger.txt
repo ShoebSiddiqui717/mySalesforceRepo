@@ -1,0 +1,35 @@
+2. Write a trigger on the Account when the Account is updated check all opportunities related to the 
+account. Update all Opportunities Stage to close lost if an opportunity created date is greater than 30 days 
+from today and stage not equal to close won. */
+trigger TR_2_acc_Opp_CLose on Account (After Update) 
+{
+ Switch on Trigger.OperationType{
+ When After_Update{
+ TR_2_class.Handler(trigger.new);
+ }
+ }
+}
+public class TR_2_class {
+ Public static void handler(list<account> accList){
+ set<id> accIds = new Set<id> ();
+ for(account aa : accList){
+ accIds.add(aa.id);
+ }
+ //DateTime day30 = 
+ List<opportunity> oppUpdate = new list<opportunity> (); 
+ List<opportunity> relatedOpp = [select id , accountid, createdDate, closeDate , StageName from opportunity 
+ where accountid in : accIds ];
+ for(opportunity opp : relatedOpp ){
+ if(opp.stageName != 'Closed Won' && opp.CreatedDate < System.Today()-30 ){
+ opp.stageName = 'Closed Lost';
+ opp.CloseDate = system.today()+5;
+ oppUpdate.add(opp);
+ }
+ }
+ if (oppUpdate.size()>0){
+ Update oppUpdate;
+ }
+ 
+ }
+ 
+}
