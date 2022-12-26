@@ -1,0 +1,21 @@
+@isTest
+private class TR_2_acc_Opp_CloseTest {
+   static testMethod void testOpportunityUpdate() {
+      // Create a test account
+      Account testAccount = new Account(Name='Test Account');
+      insert testAccount;
+
+      // Create a test opportunity with a created date more than 30 days in the past
+      Opportunity testOpportunity = new Opportunity(Name='Test Opportunity', AccountId=testAccount.Id, CreatedDate=Date.today().addDays(-31), StageName='Prospecting');
+      insert testOpportunity;
+
+      // Update the test account to trigger the trigger
+      testAccount.Name = 'Updated Test Account';
+      update testAccount;
+
+      // Query for the updated opportunity and verify that the stage was updated to "Closed Lost" and the close date was set to 5 days in the future
+      Opportunity updatedOpportunity = [SELECT Id, StageName, CloseDate FROM Opportunity WHERE Id = :testOpportunity.Id];
+      System.assertEquals(updatedOpportunity.StageName, 'Closed Lost');
+      System.assertEquals(updatedOpportunity.CloseDate, Date.today().addDays(5));
+   }
+}
