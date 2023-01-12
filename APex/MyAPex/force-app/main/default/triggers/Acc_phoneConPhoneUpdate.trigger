@@ -7,5 +7,5 @@
 **/
 trigger Acc_phoneConPhoneUpdate on Account (after update) 
 {
-    AccountClass.Method(Trigger.new);
+    AccountClass.Method(Trigger.new,trigger.oldMap);
 }
