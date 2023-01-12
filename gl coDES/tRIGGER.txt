@@ -1,0 +1,53 @@
+public with sharing class OpportunityIntakeStageController {
+    
+    @AuraEnabled
+    public static void createWIs(String opptId){
+        try {
+            if(opptId != null){
+                List<OpportunityWorkItem__c> intakeWI = checkIfIntakeWIAvailable(opptId);
+                System.debug('intakeWI:::' +intakeWI);
+                if(intakeWI == null || intakeWI.isEmpty()){
+                    String intakeWIId = createIntakeWorkItem(opptId);
+
+                    if(intakeWIId != null){
+                        createRFPReviewWorkItem(opptId);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    public static List<OpportunityWorkItem__c> checkIfIntakeWIAvailable(String oppId){
+        List<OpportunityWorkItem__c> wiList = new List<OpportunityWorkItem__c>();
+        wiList = [ SELECT Id, Name 
+                   FROM OpportunityWorkItem__c
+                   WHERE RecordType.DeveloperName = 'Intake'
+                   AND Opportunity__c =: oppId];
+
+        return wiList;        
+    }
+
+    public static String createIntakeWorkItem(String oppId){
+        OpportunityWorkItem__c owiIntake = new OpportunityWorkItem__c();
+        owiIntake.Status__c = 'Completed';
+        owiIntake.Detailed_Status__c ='Completed';
+        owiIntake.Opportunity__c = oppId;
+        insert owiIntake;
+        return  owiIntake.Id;
+    }
+
+    public static String createRFPReviewWorkItem(String oppId){
+        Schema.DescribeSObjectResult des = Schema.SObjectType.OpportunityWorkItem__c;
+        Map<String, Schema.RecordTypeInfo> rtMapByName = des.getRecordTypeInfosByName();
+
+        OpportunityWorkItem__c rfpReviewWI = new OpportunityWorkItem__c();
+        rfpReviewWI.Status__c = 'Pending';
+        rfpReviewWI.Detailed_Status__c ='Pending Census Uploader';
+        rfpReviewWI.Opportunity__c = oppId;
+        rfpReviewWI.RecordTypeId = rtMapByName.get('RFP Review').getRecordTypeId();
+        insert rfpReviewWI;
+        return  rfpReviewWI.Id;
+    }
+}

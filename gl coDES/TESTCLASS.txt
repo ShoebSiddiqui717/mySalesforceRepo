@@ -1,0 +1,74 @@
+@isTest
+public class OpportunityIntakeStageControllerTest {
+	
+    @isTest
+    public static void test_createWIs(){
+        List <TriggerSetting__c> tsList = new List <TriggerSetting__c>();
+        TriggerSetting__c ts = new TriggerSetting__c();
+        ts.isActive__c = true;
+        ts.Name = 'OpportunityWITrigger';
+        tsList.add(ts);
+        TriggerSetting__c ts1 = new TriggerSetting__c();
+        ts1.isActive__c = true;
+        ts1.Name = 'OpportunityTrigger';
+        tsList.add(ts1);
+        insert tsList;
+
+        RestrictCreateSetting__c settings = RestrictCreateSetting__c.getOrgDefaults();
+        settings.IsCreateAccess__c = true;
+        settings.Name = 'System Administrator';
+        
+        upsert settings RestrictCreateSetting__c.Id;
+        
+
+        Schema.DescribeSObjectResult des = Schema.SObjectType.Account;
+        Map<String, Schema.RecordTypeInfo> rtMapByName = des.getRecordTypeInfosByName();
+
+        Account broker = new Account();
+        broker.name='Test Broker'+(Math.random()*1000);
+        broker.BillingStreet = (Math.random()*1000)+' Locust Street';
+        broker.BillingCity = 'Philadelphia';
+        broker.BillingState = 'PA';
+        broker.BillingPostalCode = '19107';
+        broker.BillingCountry = 'US';
+        broker.Website = 'www.example'+(Math.random()*1000)+'.com';
+        broker.RecordTypeId = rtMapByName.get('Broker').getRecordTypeId();
+        insert broker;
+
+        Account planholder = new Account();
+        planholder.name='Test Planholder'+(Math.random()*1000);
+        planholder.BillingStreet = (Math.random()*1000)+' Locust Street';
+        planholder.BillingCity = 'Philadelphia';
+        planholder.BillingState = 'PA';
+        planholder.BillingPostalCode = '19107';
+        planholder.BillingCountry = 'US';
+        planholder.Website = 'www.example'+(Math.random()*1000)+'.com';
+        planholder.RecordTypeId = rtMapByName.get('Planholder').getRecordTypeId();
+        insert planholder;
+        
+        Contact con = TestDataBuilder.getContact(1, broker.Id);
+        con.LastName = 'pcb_Contact';
+        insert con;
+        
+        Opportunity opp = TestDataBuilder.getOpportunity(1, broker.Id, con.Id);
+        opp.Name = broker.Name;
+        opp.Planholder_Name__c = planholder.Id;
+        opp.StageName = 'Intake';
+        opp.Channel_Partner__c = 'Agentlink - 00067';
+        insert opp;
+
+        Test.startTest();
+        OpportunityIntakeStageController.createWIs(opp.Id);
+        Test.stopTest();
+
+        Schema.DescribeSObjectResult des1 = Schema.SObjectType.OpportunityWorkItem__c;
+        Map<String, Schema.RecordTypeInfo> rtMapByName1 = des1.getRecordTypeInfosByName();
+        List<OpportunityWorkItem__c> intakeWI = new List<OpportunityWorkItem__c>();
+        intakeWI = [SELECT Id FROM OpportunityWorkItem__c WHERE RecordTypeId =: rtMapByName1.get('Intake').getRecordTypeId()];
+        System.assertEquals(intakeWI.size(), 1);
+
+        List<OpportunityWorkItem__c> rfpReviewWI = new List<OpportunityWorkItem__c>();
+        rfpReviewWI = [SELECT Id FROM OpportunityWorkItem__c WHERE RecordTypeId =: rtMapByName1.get('RFP Review').getRecordTypeId()];
+        System.assertEquals(rfpReviewWI.size(), 1);
+    }
+}
