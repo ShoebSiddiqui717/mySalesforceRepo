@@ -1,0 +1,36 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 12-14-2022
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <template if:true={showModal}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open">
+            <template if:true={applySpinner}>
+                <div class="loader slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Loading..." size="Medium"></lightning-spinner>
+                </div>
+            </template>
+            <div class="slds-modal__container">
+            
+            <div class="slds-modal__header">
+            <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Opportunity Stage Change Warning</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium slds-modal__content_headless" id="modal-content-id-1">
+                <!-- <p>Oppertunity Id : {OppID}</p>
+                <p>Oppertunity Current Stage : {CStage}</p>
+                <p>Oppertunity Previous Stage : {PStage}</p>
+                <p>Message Recieved : {msg}</p> -->
+                <p><b>Selecting Intake Stage will move to Rating & Underwriting workflow. Select cancel to revert back.</b></p>
+            </div>
+            <div class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" aria-label="Cancel and close" onclick={UpdatePreviousHandler}>Cancel</button>
+            <button class="slds-button slds-button_brand" onclick={invokeCreateWIs}>Move to Rating & Underwriting Workflow</button>
+            </div>
+            </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+</template>

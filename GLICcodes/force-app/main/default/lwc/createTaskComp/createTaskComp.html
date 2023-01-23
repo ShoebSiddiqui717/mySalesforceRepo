@@ -1,0 +1,349 @@
+<template>
+
+
+    
+    <lightning-card title="New Task" >
+        <div class="slds-page-header">
+            <h1>Task Information</h1>
+        </div>
+        <div class="slds-var-p-around_x-small">
+            
+
+            
+            <c-custom-lookup-lwc icon-name="standard:user"
+            s-object-api-name="user"
+            label="Assigned To"
+            value={selectedRecord}
+            onlookupupdate={lookupRecord}
+            default-record-id={userId}
+            helptext="Automatically populates with your name."
+            isrequired =true
+            ></c-custom-lookup-lwc>
+
+                
+
+          
+            <lightning-combobox required="true" class="" options={typeOptions} dropdown-alignment="auto" 
+                label="Type" field-level-help ="Select the appropriate type for the activity performed"
+                placeholder="--Select Type--" value={typeSelected} onchange= 
+                {handleTypeChange}>
+            </lightning-combobox>
+           
+               
+           
+            <template if:true={boolVisible}>  
+                
+            <c-custom-lookup-lwc icon-name="standard:user"
+            helptext="Defaulted to the Broker Firm, Planholder, or Opportunity"
+
+            label="Related To"
+            value={selectedRecord}
+            onlookupupdate={lookupRecord3}
+            default-record-id={recordId}
+            isrequired =true
+
+            ></c-custom-lookup-lwc>
+            </template>
+            <lightning-combobox class="" options={approachOptions} dropdown-alignment="auto" 
+                label="Approach" required="true" 
+                placeholder="--Select Approach--" value={approachSelected} onchange= 
+                {handleApproachChange}>
+            </lightning-combobox>
+
+            <c-custom-lookup-lwc icon-name="standard:contact"
+            s-object-api-name="contact"
+            label="Name"
+            value={selectedRecord}
+            onlookupupdate={lookupRecord1}
+            isrequired =true
+            ></c-custom-lookup-lwc>
+
+            
+            <lightning-dual-listbox name="Topic"
+                label="Topic" required="true"  field-level-help	="What did you meet on? (You can select multiple)"
+                source-label="Available"
+                selected-label="Chosen"
+                options={topicOptions}
+                onchange={handleTopicChange}>
+            </lightning-dual-listbox>
+            
+            <lightning-combobox class="" options={withwhomOptions} dropdown-alignment="auto" 
+                label="With whom" required="true" field-level-help ="Who did you meet with?"
+                placeholder="--Select With whom--" value={withwhomSelected} onchange= 
+                {handleWithwhomchChange}>
+            </lightning-combobox>
+
+            <lightning-combobox class="" options={statusOptions} dropdown-alignment="auto" 
+                label="Status" required="true" 
+                placeholder="--Select Status--" value={statusSelected} onchange= 
+                {handleStatusChange}>
+            </lightning-combobox>
+
+            <lightning-input type="datetime" value={dateClosed} label="Date Closed" onchange={handelDateClosedchange}></lightning-input>
+            <br/>
+            <!--
+            <lightning-input type="checkbox" value={createRecurring} label="Create Recurring Series of Tasks" onchange={handelRecurrringchange}></lightning-input>
+            <br/>
+            <br/>
+            <template if:true={createRecurring}>
+                <div class="slds-text-heading_small">Frequency</div>
+
+                <br/>
+
+                <lightning-button variant={dbtn} label="Daily" title="Daily" onclick={dailyHandleClick} class="slds-m-left_x-small"></lightning-button>
+                <lightning-button variant={wbtn} label="Weekly" title="Weekly" onclick={weeklyHandleClick} class="slds-m-left_x-small"></lightning-button>
+                <lightning-button variant={mbtn} label="Monthly" title="Monthly" onclick={monthlyHandleClick} class="slds-m-left_x-small"></lightning-button>
+                <lightning-button variant={ybtn} label="Yearly" title="Yearly" onclick={yearlyHandleClick} class="slds-m-left_x-small"></lightning-button>
+
+                </template>
+                <br/>
+                <br/>
+                <template if:true={isDailySelected}>
+
+                    <lightning-combobox class="" options={repeatoptions} dropdown-alignment="auto" 
+                    label="Repeat" 
+                    value={repeatSelected} onchange= 
+                    {handleRepeatChange}>
+                    </lightning-combobox>
+                    <template if:true={isShowEvery}>
+                        <lightning-layout >
+                        
+                            <lightning-layout-item size="8" class="">
+
+                    <lightning-combobox class="" options={everyoptions} dropdown-alignment="auto" 
+                    label="Every" 
+                    value={everySelected} onchange= 
+                    {handleEveryChange}>
+                    </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="">
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="">
+                        Day(s)
+                    </lightning-layout-item>
+                    </lightning-layout>
+                    </template>
+                    <br/>
+                    <lightning-input type="date" value={startDate} label="Start Date" onchange={handelStartDatechange}></lightning-input>
+                    <lightning-input type="date" value={endDate} label="End Date" onchange={handelEndDatechange}></lightning-input>
+                    <a href="#">Calculate Latest Date</a>  <lightning-helptext content="You must specify an end date for recurring tasks. The latest possible end date depends on the task frequency . Click Calculate Latest Date to set the end date to the latest possible date."></lightning-helptext>
+
+                </template>
+                <template if:true={isWeeklySelected}>
+                    <lightning-combobox class="" options={repeatoptions1} dropdown-alignment="auto" 
+                    label="Repeat"  
+                    value={repeatSelectedW} onchange= 
+                    {handleRepeatWChange}>
+                    </lightning-combobox>
+                    <template if:true={isShowEveryW}>
+                        <lightning-layout >
+                        
+                            <lightning-layout-item size="8" class="">
+                    <lightning-combobox class="" options={everyoptions} dropdown-alignment="auto" 
+                    label="Every"  
+                    value={everySelecteW} onchange= 
+                    {handleEveryWChange}>
+                    </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="1" class="">
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="">
+                        Week(s)
+                    </lightning-layout-item>
+
+                    </lightning-layout>
+                    </template>
+                    <br/>
+                    <label class="slds-form-element__label" for="input-60"><abbr class="slds-required" title="required"></abbr>Repeat On <lightning-helptext content="Select at least one day. To change days, select the new day before you deselect the old day." ></lightning-helptext></label>  
+                    <lightning-layout >
+                        
+                           
+                    <lightning-radio-group 
+                    options={redioOptions}
+                    value={repeatOnW}
+                    type="button" onchange={handelRepeatOnWchange}
+                    class="customRadioCls"></lightning-radio-group>
+                    
+                    <lightning-radio-group 
+                    options={redioOptions1}
+                    value={repeatOnW1}
+                    type="button" onchange={handelRepeatOnWchange1}
+                    class="customRadioCls"></lightning-radio-group>
+                    
+
+                    <lightning-radio-group 
+                    options={redioOptions2}
+                    value={repeatOnW2}
+                    type="button" onchange={handelRepeatOnWchange2}
+                    class="customRadioCls"></lightning-radio-group>
+                
+                    <lightning-radio-group 
+                    options={redioOptions3}
+                    value={repeatOnW3}
+                    type="button" onchange={handelRepeatOnWchange3}
+                    class="customRadioCls"></lightning-radio-group>
+               
+                    <lightning-radio-group 
+                    options={redioOptions4}
+                    value={repeatOnW4}
+                    type="button" onchange={handelRepeatOnWchange4}
+                    class="customRadioCls"></lightning-radio-group>
+               
+                    <lightning-radio-group 
+                    options={redioOptions5}
+                    value={repeatOnW5}
+                    type="button" onchange={handelRepeatOnWchange5}
+                    class="customRadioCls"></lightning-radio-group>
+                
+                    <lightning-radio-group 
+                    options={redioOptions6}
+                    value={repeatOnW6}
+                    type="button" onchange={handelRepeatOnWchange6}
+                    class="customRadioCls"></lightning-radio-group>
+                </lightning-layout>
+
+                    <br/>
+
+                    <lightning-input type="date" value={startDateW} label="Start Date" onchange={handelStartDateWchange}></lightning-input>
+                    <lightning-input type="date" value={endDateW} label="End Date" onchange={handelEndDatewchange}></lightning-input>
+                    <a href="#">Calculate Latest Date</a>  <lightning-helptext  content="You must specify an end date for recurring tasks. The latest possible end date depends on the task frequency . Click Calculate Latest Date to set the end date to the latest possible date."></lightning-helptext>
+
+                </template>
+                <template if:true={isMonthlySelected}>
+                    <lightning-combobox class="" options={repeatoptions2} dropdown-alignment="auto" 
+                    label="Repeat" 
+                    value={repeatSelectedM} onchange= 
+                    {handleRepeatMChange}>
+                    </lightning-combobox>
+                    <template if:true={isShowEveryM}>
+                        <lightning-layout >
+                        
+                            <lightning-layout-item size="8" class="">
+
+                        <lightning-combobox class="" options={everyoptions} dropdown-alignment="auto" 
+                        label="Every" 
+                        value={everySelectedM} onchange= 
+                        {handleEveryMChange}>
+                        </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="1" class="">
+                        </lightning-layout-item>
+                        <lightning-layout-item size="2" class="">
+                            Month(s)
+                        </lightning-layout-item>
+                        </lightning-layout>
+                        </template>
+                        <br/>
+                        <lightning-combobox class="" options={WhenMnthoptions} dropdown-alignment="auto" 
+                        label="When"  
+                        value={whenMonthSelected} onchange= 
+                        {handleWhenMonthChange}>
+                        </lightning-combobox> 
+                        <template if:false={isShowRelativeDay}>
+
+                        <lightning-combobox class="" options={Dayoptions} dropdown-alignment="auto" 
+                        label="Day"  
+                        value={dayMselected} onchange= 
+                        {handleDayMChange}>
+                        </lightning-combobox> 
+                        </template> 
+                        <template if:true={isShowRelativeDay}>
+                            <lightning-combobox class="" options={dayyear} dropdown-alignment="auto" 
+                            label="Day"  
+                            value={dayMTSelected} onchange= 
+                            {handleDayMTChange}>
+                            </lightning-combobox>
+
+                            <lightning-combobox class="" options={repeatOnMonth} dropdown-alignment="auto" 
+                            label="Repeat On"  
+                            value={repeatOnM} onchange= 
+                            {handelRepeatOnMchange}>
+                            </lightning-combobox>
+                            </template>  
+                            <br/>
+
+                            <lightning-input type="date" value={startDateM} label="Start Date" onchange={handelStartDateMchange}></lightning-input>
+                            <lightning-input type="date" value={endDatM} label="End Date" onchange={handelEndDateMchange}></lightning-input>    
+                           <div> <a href="#">Calculate Latest Date</a>  <lightning-helptext content="You must specify an end date for recurring tasks. The latest possible end date depends on the task frequency . Click Calculate Latest Date to set the end date to the latest possible date."></lightning-helptext></div>
+
+                </template>
+                <template if:true={isYearlySelected}>
+
+
+                    <lightning-combobox class="" options={WhenYearoptions} dropdown-alignment="auto" 
+                    label="When" 
+                    value={whenYearSelected} onchange= 
+                    {handleWhenYearChange}>
+                    </lightning-combobox>
+                    <template if:true={isShowRelativeDate}>
+
+                        <lightning-combobox class="" options={dayyear} dropdown-alignment="auto" 
+                        label="Day"  
+                        value={dayYSelected} onchange= 
+                        {handleDayYChange}>
+                        </lightning-combobox>
+                        <lightning-combobox class="" options={repeatOnMonth} dropdown-alignment="auto" 
+                        label="Repeat On" 
+                        value={repeatOnY} onchange= 
+                        {handelRepeatOnYchange}>
+                        </lightning-combobox>
+                        <lightning-combobox class="" options={monthsName} dropdown-alignment="auto" 
+                        label="Month"  
+                        value={MonthSelected} onchange= 
+                        {handleMonthNameChange}>
+                        </lightning-combobox>
+                    </template>
+
+                    
+                    <br/>
+
+                    <lightning-input type="date" value={startDateY} label="Start Date" onchange={handelStartDateYchange}></lightning-input>
+                    <lightning-input type="date" value={endDateY} label="End Date" onchange={handelEndDateYchange}></lightning-input>  
+                    <a href="#">Calculate Latest Date</a>  <lightning-helptext content="You must specify an end date for recurring tasks. The latest possible end date depends on the task frequency . Click Calculate Latest Date to set the end date to the latest possible date."></lightning-helptext>
+
+                </template>
+
+                <br/>
+                <br/>
+                -->
+            <div class="slds-page-header">
+                <h1>Description Information</h1>
+            </div>
+            
+            <lightning-input value={comments} label="Comments" onchange={handelCommentschange} field-level-help ="Add any additional relevant information"  ></lightning-input>
+            <br/>
+            <br/>
+
+            <div class="slds-page-header">
+                <h1>Additional Information</h1>
+            </div>
+            <lightning-combobox required="true" class="" options={priorityOptions} dropdown-alignment="auto" 
+            label="Priority"
+            placeholder="--Select Priority--" value={prioritySelected} onchange= 
+            {handlePriorityChange}>
+            </lightning-combobox>
+            <c-combobox-autocomplete 
+            label="Subject"
+            options={options}
+            onselectoption={handleOptionChange}
+            classes="slds-m-bottom_small"
+            onchange={handelSubjectchange1}
+            ></c-combobox-autocomplete>
+            
+            <lightning-input required="true" type="date" value={dueDate} disabled={isDisableDuedate} label="Due Date" onchange={handelDueDatechange}></lightning-input>
+
+            
+            <br/>
+            
+            <br/>
+
+
+
+           
+
+            
+                                    <br/>
+            <lightning-button label="Save" onclick={createTaskRec} variant="brand"></lightning-button>
+        </div>
+    </lightning-card>
+</template>

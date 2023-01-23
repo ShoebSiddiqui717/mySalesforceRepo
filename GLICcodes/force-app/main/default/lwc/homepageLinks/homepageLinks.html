@@ -1,0 +1,13 @@
+<template>
+    <lightning-card title="Custom Links" icon-name="standard:link">
+        <template if:true={urls.data}>
+            <ul class="slds-list_dotted">
+                <template for:each={urls.data} for:item="url">
+                <li key={url.Name}>
+                    <lightning-formatted-url value={url.URL__c} label={url.Label__c} target={url.Target__c}></lightning-formatted-url>
+                </li>
+                </template>
+            </ul>
+        </template>
+    </lightning-card>
+</template>

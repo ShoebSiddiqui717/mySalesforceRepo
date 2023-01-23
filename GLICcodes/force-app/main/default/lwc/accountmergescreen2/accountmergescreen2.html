@@ -1,0 +1,88 @@
+<template>
+    
+    <div class="slds-p-around_medium lgc-bg slds-float_right">
+        <lightning-button label={label.previousButton} variant="brand" onclick={handlePrevious} class="" disabled={disableButtons}></lightning-button>
+        <lightning-button label={label.mergeButton} onclick={handleMerge}  variant="success" class="slds-p-left_medium" disabled={disableButtons}></lightning-button>
+        <lightning-button label={label.traverseToMaster} onclick={goToMaster} class="slds-p-left_medium" ></lightning-button>
+    </div>
+    
+    <!-- Error/Sucess Message Section-->
+    <template if:true={error}>
+        <h2>
+            <div class="slds-text-color_destructive slds-text-heading_medium slds-align_absolute-center" style="font-weight: bold;">
+                {error.body.message}
+            </div>
+        </h2>
+    </template>
+
+    <template if:true={customErrorMessage}>
+        <h2>
+            <div class="slds-text-color_destructive slds-text-heading_medium slds-align_absolute-center" style="font-weight: bold;">
+                {customErrorMessage}
+            </div>
+        </h2>
+    </template>
+    
+    <template if:true={resultFromMerge}>
+        <h2>
+            <div class="slds-text-color_success slds-text-heading_medium slds-align_absolute-center" style="font-weight: bold;">
+                {label.mergeSuccessMessage}
+            </div>
+        </h2>
+    </template>
+    <!-- Error/Sucess Message Section-->
+
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped slds-scrollable" style="min-width: 100%;">
+        
+        <template if:true={accountData}>
+
+            <thead class="slds-p-bottom_medium ">
+                    <tr  class="">
+                        <template if:true={tableHeaderData}>
+                            <template for:each={tableHeaderData} for:item="headerRecord" for:index="headerindex">
+
+                                <th class="slds-p-left_medium slds-text-heading_small" key={headerRecord} style="max-width: 15%;width: 100%;">
+                                    <input type="checkbox" value={headerindex} onclick={handleSelectAllCheckBox} name={headerRecord}>
+                                    <lightning-formatted-text value={headerRecord} data-id="" data-c2="" data-c3="" class="slds-p-left_small" ></lightning-formatted-text>
+                                </th>
+                            </template>
+                        </template>
+                    </tr> 
+            </thead>
+            
+            <tbody class="slds-col slds-scrollable">
+
+                <template for:each={accountData} for:item="record">
+
+                    <tr key={record.fieldLabel}>
+
+                        <td class="slds-col slds-p-left_medium slds-text-longform" >
+                            <lightning-formatted-text value={record.fieldLabel} data-id="" data-c2="" data-c3="" ></lightning-formatted-text>
+                        </td>
+
+                        <template if:true={record.fieldData}>
+
+                            <template for:each={record.fieldData} for:item="innerrecord" for:index="bodyindex"> 
+
+                                <td class="slds-col slds-text-longform slds-p-right_medium" key={innerrecord}>
+
+                                    <input type="checkbox" name={record.fieldLabel} value={innerrecord} onclick={handleCheckboxClick} data-index={bodyindex} data-recordapi={record.fieldApi}>
+                                    <lightning-formatted-text value={innerrecord} class="slds-p-left_small slds-cell-wrap"></lightning-formatted-text>
+                               
+                                </td>  
+
+                            </template>
+
+                        </template>  
+
+                    </tr>
+
+                </template> 
+
+            </tbody>
+
+        </template> 
+
+    </table>
+
+</template>

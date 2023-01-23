@@ -1,0 +1,44 @@
+.cardSpinner{
+    position: relative;;
+}
+
+
+
+c-l-w-c-custom-datatable-type{
+    overflow: auto;
+}
+.THIS .tableHeader thead th button {
+    visibility: hidden;
+    display: none;
+    }
+
+
+.slds-modal__content{
+    overflow: auto;
+}
+.slds-table{
+    margin-bottom: 200px !important;
+}
+
+.wrapper {
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+  .slds-modal__content{
+    overflow: visible;
+    
+}
+
+
+
+.floated {
+    float:left;
+    margin-right:5px;
+ }
+
+ .slds-grid {
+    display: grid;
+}

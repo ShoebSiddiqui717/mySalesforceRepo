@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Location Selector">
+      <div class="slds-p-around_medium">
+        <lightning-combobox
+          label="Select a location"
+          placeholder="Select a location"
+          options={locationOptions}
+          value={selectedLocation}
+          onchange={handleLocationChange}
+        ></lightning-combobox>
+        <template if:true={showMalls}>
+          <lightning-combobox
+            label="Select a mall"
+            placeholder="Select a mall"
+            options={mallOptions}
+            value={selectedMall}
+            onchange={handleMallChange}
+          ></lightning-combobox>
+        </template>
+        <template if:true={showHotels}>
+          <lightning-combobox
+            label="Select a hotel"
+            placeholder="Select a hotel"
+            options={hotelOptions}
+            value={selectedHotel}
+            onchange={handleHotelChange}
+          ></lightning-combobox>
+        </template>
+      </div>
+    </lightning-card>
+  </template>

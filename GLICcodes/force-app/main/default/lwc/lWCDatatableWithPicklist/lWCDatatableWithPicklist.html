@@ -1,0 +1,168 @@
+<template>
+    <!-- header -->
+    <div class="slds-tabs_card">
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container slds-icon-standard-opportunity">
+                                 <lightning-icon icon-name="standard:recipe" alternative-text="recipe" title="recipe"></lightning-icon>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span>Analytics</span>
+                                        
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- /header -->
+   <lightning-card>
+    <div  class="slds-align_absolute-center">
+    <lightning-button    class="slds-m-around_medium" 
+                        label="New Analytics"  
+                        variant="brand-outline" 
+                        onclick={handleNewAnalytic}>
+   </lightning-button> <br/> <br/>
+                        
+    <lightning-button    class="slds-m-around_medium" 
+                        label="Mass Update"  
+                        variant="brand-outline" 
+                        onclick={showModalBox}>
+    </lightning-button>
+    </div>
+        <!-- loader -->
+        <div if:true={showSpinner}>
+            <lightning-spinner
+                alternative-text="Loading..." variant="brand">
+            </lightning-spinner>
+        </div>
+        <!-----/loader-------->
+      
+        <div class="slds-var-p-around_small">
+            <template if:true={data}>
+              
+               
+                <c-l-w-c-custom-datatable-type 
+                
+                    key-field="Id"
+                    data={data} 
+                    columns={columns} 
+                    onpicklistchanged={picklistChanged} 
+                    onvalueselect={handleSelection}
+                    draft-values={draftValues} 
+                    oncellchange={handleCellChange}
+                    onsave={handleSave}
+                    oncancel={handleCancel}
+                    
+                    >
+                </c-l-w-c-custom-datatable-type>
+              
+            </template>
+            
+            
+        </div>
+    
+    </lightning-card>
+
+    <template if:true={isShowModal}>
+
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+             <!-- modal header start -->
+               <header class="slds-modal__header">
+                  
+                  <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate"><b>Mass Update</b></h2>
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                    <lightning-icon icon-name="utility:close"
+                       alternative-text="close"
+                       
+                       variant="error"
+                       size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                 </button>
+                </header>
+               <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <lightning-card title={msg} icon-name="custom:custom14" style="height: 70%;">
+                    <div class="slds-card__body slds-card__body_inner">
+                    <lightning-layout horizontal-align="left" vertical-align="end">
+                    <div class="slds-var-m-top_large slds-var-p-right_medium">
+                    
+                    <div class="slds-grid slds-gutters" >
+                        <div class="slds-col">
+                            <span class="slds-var-m-top_large slds-var-p-right_medium"><b>Step 1. Select Field to Update :</b></span>
+                        </div>
+                        <div class="slds-col">
+                            
+                            <lightning-combobox
+                            name="Step 1. Select Field to Update"
+                            label=""
+                            value={value}
+                            placeholder="Select Field to update"
+                            options={options}
+                            onchange={handleChange}
+                           
+                            >
+                    </lightning-combobox>
+                    
+                    
+                    
+                            
+                        </div>
+                        </div>
+                        
+                    <br/>
+                    
+                    <div class="slds-grid slds-gutters" align="left">
+                    <div class="slds-col">
+                    <span><b>Step 2. Provide Value</b></span>
+                    </div>
+                    <br/>
+                    <div class="slds-col">
+                    <template if:true ={fieldApiNameToShow}>
+                    <lightning-record-edit-form record-id={analyticalId} object-api-name="Analytic__c"   onsuccess={handleSuccess} onsubmit ={handleSubmit} onerror={handleError}>
+                    
+                    
+                    <lightning-input-field field-name={fieldApiNameToShow} variant="label-hidden">
+                    </lightning-input-field>
+                    <br/>
+                    
+                   
+                    <lightning-button class="floated" variant="success" type="submit" name="Update" label="Done"></lightning-button>
+                   
+                
+                    
+                    </lightning-record-edit-form>
+                    </template>
+                   
+                    </div>
+                    
+                    </div>
+                    </div>
+                    
+                    </lightning-layout>
+                    </div>
+                    
+                    </lightning-card>
+          </div>
+          <footer class="slds-modal__footer">
+            <lightning-button class="floated" variant="destructive"  name="Cancel" label="Cancel" onclick={hideModalBox}></lightning-button>
+        </footer>
+               </div>
+            
+            </section>
+
+
+</template>
+
+
+</template>

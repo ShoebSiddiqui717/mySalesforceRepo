@@ -1,0 +1,161 @@
+<template>
+
+    <template if:true={error}>
+        <h2>
+            <div class="slds-text-color_destructive slds-text-heading_medium slds-align_absolute-center" style="font-weight: bold;">
+                {error}
+            </div>
+        </h2>
+    </template>
+
+    <div class="slds-p-around_medium lgc-bg slds-float_right">
+        <lightning-button label={label.nextButton} variant="brand" onclick={handleNext} class=""></lightning-button>
+        <lightning-button label={label.refreshButton} onclick={handleRefresh} class="slds-p-left_medium"></lightning-button>
+        
+    </div>
+    <br><br>
+    
+    <form>
+        <div class="slds-p-around_medium lgc-bg">
+            <lightning-input type="text" label={label.inputLabel} placeholder={label.inputPlaceholder} onchange={handleAccountInput} name="userinput" class="contactName" id="userinputsc1"></lightning-input>
+            <br>
+        </div>
+    </form>
+
+    <!-- table starts-->
+    <template if:true={accountData}>
+        
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">
+                        <div class="slds-truncate">
+                        
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.accountNameHeader}>
+                            <lightning-icon icon-name="standard:account" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.accountNameHeader}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.recordTypeName}>
+                            <lightning-icon icon-name="standard:record" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.recordTypeName}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.mailingCity}>
+                            <lightning-icon icon-name="standard:home" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.mailingCity}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.mailingState}>
+                            <lightning-icon icon-name="standard:agent_home" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.mailingState}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.phone}>
+                            <lightning-icon icon-name="standard:call" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.phone}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.rgo}>
+                            <lightning-icon icon-name="standard:address" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.rgo}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.smallmarket}>
+                            <lightning-icon icon-name="standard:order_item" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.smallmarket}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.coremarket}>
+                            <lightning-icon icon-name="standard:orders" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.coremarket}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.largemarket}>
+                            <lightning-icon icon-name="standard:entity" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.largemarket}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.status}>
+                            <lightning-icon icon-name="standard:shipment" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.status}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.siteHeader}>
+                            <lightning-icon icon-name="standard:employee_contact" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.siteHeader}</span>
+                        </div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title={label.ownerHeader}>
+                            <lightning-icon icon-name="standard:avatar" size="small" ></lightning-icon>
+                            <span class="slds-p-left_x-small">{label.ownerHeader}</span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <template for:each={accountData} for:item="record">
+                    <tr key={record.Id}>
+                        <td scope="col">
+                            <div>
+                                <lightning-input type="checkbox" value={record.Id} data-id={record.Id} onchange={handleCheckboxSelection}></lightning-input>
+                            </div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Name}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.RecordType.Name}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.BillingCity}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.BillingState}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Phone}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.RGO__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Small_Market_Tier__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Core_Market_Tier__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Large_Market_Tier__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Status__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Planholder_Tier__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div>{record.Owner.Name}</div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </template>
+    <!--table ends-->
+</template>

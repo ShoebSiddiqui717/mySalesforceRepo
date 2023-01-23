@@ -1,0 +1,64 @@
+<template>
+     
+    <template if:true={ismodalopen}>
+       
+       <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open" >
+           <div class="slds-modal__container" >
+               <!-- <div class="slds-scrollable_x"> -->
+               
+               <!-- Modal/Popup Box LWC header here -->
+               <header class="slds-modal__header" style="background-color: #f3f6f7;">
+                   <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title={label.closeButton} onclick={closeWindow} >
+
+                   <lightning-icon icon-name="utility:close" alternative-text={label.closeButton} variant="inverse" size="small" ></lightning-icon>
+                       <span class="slds-assistive-text">{label.closeButton}</span>
+                   </button>
+                   <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate" style="background-color: #f3f6f7">
+                       <div class="slds-grid slds-wrap">
+                           <div class="slds-col slds-size_3-of-12">
+                               <img src={guardianlogo} style="float: left;">
+                           </div>
+                           <div class="slds-col slds-size_5-of-12 slds-p-top_x-small">
+                               <div class="slds-align_absolute-center slds-p-top_medium" style="color: #194157;font-weight: bold">
+                                   {label.contactMerge}
+                               </div>
+                           </div>
+                           <div class="slds-col slds-size_3-of-12">
+                           </div>
+                       </div>
+                   </h2>
+               </header>
+               <!-- Modal/Popup Box LWC body starts here -->
+               
+               <div class="slds-modal__content slds-p-around_medium slds-scrollable" id="modal-content-id-1" style="background-color: #f3f6f7; max-height:95%">
+                  
+                   <template if:true={showscreen1}>
+                       <c-contactmergescreen1 onnext={showScreen2} searchtextfrompreviousbutton={searchkey}></c-contactmergescreen1>
+                   </template>
+
+                   <template if:true={showscreen2}>
+                       <c-contactmergescreen2 selectedcontactids={selectedcontactids} searchkey={searchkey} onprevious={showScreen1WithData} ></c-contactmergescreen2>
+                   </template>
+               
+                   <template if:true={error}>
+                       <h2>
+                           <div class="slds-text-color_destructive slds-text-heading_medium slds-align_absolute-center" style="font-weight: bold;">
+                               {error}
+                           </div>
+                       </h2>
+                   </template>
+               </div>
+
+               <!-- Modal/Popup Box LWC footer starts here -->
+               <footer class="slds-modal__footer">
+                   <button class="slds-button slds-button_neutral" onclick={closeWindow} title={label.cancelButton}>{label.cancelButton}</button>
+                   
+               </footer>
+           <!-- </div> -->
+           </div>
+       </section>
+       <div class="slds-backdrop slds-backdrop_open"></div>
+        
+   </template>
+
+</template>

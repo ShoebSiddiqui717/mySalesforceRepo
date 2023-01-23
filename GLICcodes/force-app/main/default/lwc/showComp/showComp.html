@@ -1,0 +1,180 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 01-19-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+   <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_medium">
+      
+      <div class="slds-modal__container">
+         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={goToLead}>
+            <lightning-icon icon-name="utility:close"
+               alternative-text="close"
+               variant="inverse"
+               size="small" ></lightning-icon>
+            <span class="slds-assistive-text">Close</span>
+         </button>
+      
+      
+      <div class="slds-modal__content slds-p-around_medium slds-theme_shade" id="modal-content-id-1">
+         <!-- HEADER  -->
+         <div class="slds-align_absolute-center slds-text-heading_large" >Your lead has been converted</div>
+         <!-- LEAD IMAGE -->
+         <div><img src="/projRes/ui-lead-runtime-components/images/lead_convert_celebration@2x.gif" alt="Lead Convert Celebration" class="slds-align_absolute-center slds-p-bottom_large slds-size_1-of-4"  ></div>
+
+         <!-- VISIBILTY OF COMPONENT BASED ON CONVERTED OPPORTUNITY ID  -->
+          <!-- WITH OPPORTUNITY -->
+      <template if:true={oppId}>
+            <div class="slds-m-vertical_xx-small">
+               
+            
+      <div class="slds-grid slds-gutters">
+         
+         <div class="slds-hidden">I am hidden {sub}</div>
+
+<template if:false={showplanholder}>
+         <div class="slds-col">
+               <p class="slds-text-heading_medium slds-p-bottom_large">ACCOUNT</p> 
+               <lightning-card  variant="Narrow" icon-name="standard:account">
+                  <a slot="title"  href={goToAcc}>{convertacc}</a>
+             
+                  <span class="slds-align_absolute-center slds-p-around_small slds-text-heading_small">
+                     Record Type: {convertaccRecordtype}<br>
+                     Status: {ConvertedAccStatus__c}<br>
+                     RGO: {convertaccRGO}<br>
+                     Website: {convertaccw}<br>
+                     Mailing Address: {convertaccMailing}<br>
+                     Type: {convertacctype}<br>
+                     Phone: {ConvertAccP}<br>
+                     Account Owner: {ConvertAccO}<br>
+                     Account Site: {convertaccs}<br>
+                  </span>
+               </lightning-card>
+              
+         </div>
+         </template>
+         <template if:true={showplanholder}>
+
+            <div class="slds-col">
+               <p class="slds-text-heading_medium slds-p-bottom_large">ACCOUNT</p> 
+               <lightning-card  variant="Narrow" icon-name="standard:account">
+                  <a slot="title"  href={goToplanholder}>{planholderName}</a>
+             
+                  <span class="slds-align_absolute-center slds-p-around_small slds-text-heading_small">
+                     Record Type: {convertaccRecordtype}<br>
+                     Status: {ConvertedAccStatus__c}<br>
+                     RGO: {convertaccRGO}<br>
+                     Website: {convertaccw}<br>
+                     Mailing Address: {convertaccMailing}<br>
+                     Type: {convertacctype}<br>
+                     Phone: {ConvertAccP}<br>
+                     Account Owner: {ConvertAccO}<br>
+                     Account Site: {convertaccs}<br>
+                     </span>
+               </lightning-card>
+              
+         </div>
+
+         </template>
+
+         <div class="slds-col">
+               <p class="slds-text-heading_medium slds-p-bottom_large">CONTACT</p>
+               <lightning-card  variant="Narrow" icon-name="standard:contact" >
+                  <a slot="title" href={goToCon} >{convertcon}</a>
+                  <span class="slds-align_absolute-center slds-p-around_small slds-text-heading_small">
+                     Record Type: {convertcontRecordtype}<br>
+                     Status: {convertcontStatus}<br>
+                     Phone: {convertconp}<br>
+                     Email: {convertconemail}<br>
+                     Account Name: {convertacc} <br>
+                     Title:  {convertcont} <br>
+                     Mobile: {convertconm}<br>
+                     
+               </span>
+               </lightning-card>
+         </div>
+
+         <div class="slds-col">
+               <p class="slds-text-heading_medium slds-p-bottom_large">OPPORTUNITY</p> 
+               <lightning-card  variant="Narrow" icon-name="standard:opportunity" >
+                  <a slot="title" href={goToOpp} >{convertopp}</a>
+               <span class="slds-align_absolute-center slds-p-around_small slds-text-heading_small">
+                  Stage: {ConvertOppStage}<br>
+                  Effective Date: {ConvertOppEffectiveDate}<br>
+                  Broker Firm: {ConvertOppBrokerFirm}<br>
+                  Number of Lives: {ConvertOppNumberofLives}<br>
+                  Account Name: {convertacc}<br>
+                  Close Date: {ConvertOppC}<br>
+                  Amount: {ConvertOppNOL}<br>
+                  Opportunity Owner: {ConvertOppBID}<br>
+               </span>
+               </lightning-card>
+         </div>
+
+            </div>
+           
+            
+
+         </div>
+      </template>
+       <!-- WITHOUT OPPORTUNITY -->
+      <template if:false={oppId}>
+        
+         <div class="slds-m-vertical_xx-small">
+            <div class="slds-grid slds-gutters  ">
+
+               <div class="slds-col">
+                  <!-- BLANK -->
+               </div>
+               <div class="slds-col">
+                  <p class="slds-text-heading_medium slds-p-bottom_large">ACCOUNT</p> 
+                  <lightning-card  variant="Narrow" icon-name="standard:account">
+                     <a slot="title" href={goToAcc} >{convertacc}</a>
+                     <span class="slds-align_absolute-center slds-p-around_small slds-text-heading_small">
+                        Record Type: {convertaccRecordtype}<br>
+                        Status: {ConvertedAccStatus__c}<br>
+                        RGO: {convertaccRGO}<br>
+                        Website: {convertaccw}<br>
+                        Mailing Address: {convertaccMailing}<br>
+                        Type: {convertacctype}<br>
+                        Phone: {ConvertAccP}<br>
+                        Account Owner: {ConvertAccO}<br>
+                        Account Site: {convertaccs}<br>
+                     </span>
+                  </lightning-card>
+            </div>  
+            <div class="slds-col">
+               <p class="slds-text-heading_medium slds-p-bottom_large">CONTACT</p> 
+               <lightning-card  variant="Narrow" icon-name="standard:contact" >
+                  <a slot="title" href={goToCon} >{convertcon}</a>
+                  <span class="slds-align_absolute-center slds-p-around_small slds-text-heading_small">
+                     Record Type: {convertcontRecordtype}<br>
+                     Status: {convertcontStatus}<br>
+                     Phone: {convertconp}<br>
+                     Email: {convertconemail}<br>
+                     Account Name: {convertacc} <br>
+                     Title:  {convertcont} <br>
+                     Mobile: {convertconm}<br>
+               </span>
+               </lightning-card>
+         </div>  
+      
+               <div class="slds-col">
+                    <!-- BLANK -->
+               </div>  
+                  </div>
+         </div>
+     </template>
+      </div>
+      
+      
+      <div class="slds-modal__footer">
+      <button class="slds-button slds-button_neutral" onclick={navigateToTask} >New Task</button>
+      <button class="slds-button slds-button_brand" onclick={goToLead}>Go To Leads</button>
+      </div>
+      </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>

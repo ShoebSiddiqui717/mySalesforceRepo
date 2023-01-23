@@ -1,0 +1,19 @@
+.picklist-section{
+  margin-top: -1rem;
+  margin-left: -0.5rem;
+  position: absolute !important;
+  min-width: 10%;
+  z-index: 999999999999;
+  overflow: auto;
+  height: 200px;
+  
+} 
+.picklist-section .slds-dropdown{
+  position: inherit !important;
+    max-height: 120px;
+    max-width:inherit;
+    overflow: auto;
+ z-index: 5;
+ 
+ 
+}

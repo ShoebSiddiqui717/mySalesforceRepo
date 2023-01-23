@@ -1,0 +1,18 @@
+.slds-scrollable_y{
+    height: 400px;
+    overflow: auto;
+
+}
+:host{
+    height:500px;
+}
+.slds-table{
+    margin-bottom: 500px !important;
+}
+
+c-picklist-column.slds-scrollable_y,
+c-picklist-column.slds-scrollable--y,
+c-picklist-column.slds-scrollable_x,
+c-picklist-column.slds-scrollable--x {
+    overflow:auto;
+}
