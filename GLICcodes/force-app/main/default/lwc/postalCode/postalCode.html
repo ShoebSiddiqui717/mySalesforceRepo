@@ -1,0 +1,34 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 01-23-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <lightning-card  variant="Narrow"  title="Postal Address Search" icon-name="standard:account">
+        <p class="slds-p-horizontal_small">Search Postal Address by PIN code e.g. 431401</p>
+        <lightning-input type="number" variant="label-inline-compact" name="Search" placeholder="Enter Pincode here..." onchange={handlePinCodeChange}></lightning-input>
+        <lightning-button label="Search" onclick={handleSearchClick}></lightning-button>
+        <template if:true={postOffices}>
+            <table>
+              <thead>
+                <tr>
+                  <th>Post Office Name</th>
+                  <th>District</th>
+                  <th>State</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template for:each={postOffices} for:item="postOffice">
+                  <tr key={postOffice.PostOfficeName}>
+                    <td>{postOffice.Name}</td>
+                    <td>{postOffice.District}</td>
+                    <td>{postOffice.State}</td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </template>
+    </lightning-card>
+</template>
