@@ -1,0 +1,35 @@
+@isTest
+global class Batch_US_fakeResponse implements HttpCalloutMock 
+{
+    // Implement this interface method
+    global HTTPResponse respond(HTTPRequest request) {
+        // Create a fake response
+        HttpResponse response = new HttpResponse();
+        response.setHeader('Content-Type', 'application/json');
+        response.setBody('[{"input_index":0,"candidate_index":0,"delivery_line_1":"525 S Winchester Blvd","last_line":"San Jose CA 95128-2537","delivery_point_barcode":"951282537251","components":{"primary_number":"525","street_predirection":"S","street_name":"Winchester","street_suffix":"Blvd","city_name":"San Jose","default_city_name":"San Jose","state_abbreviation":"CA","zipcode":"95128","plus4_code":"2537","delivery_point":"25","delivery_point_check_digit":"1"},"metadata":{"record_type":"S","zip_type":"Standard","county_fips":"06085","county_name":"Santa Clara","carrier_route":"C013","congressional_district":"18","rdi":"Commercial","elot_sequence":"0094","elot_sort":"A","latitude":37.3176,"longitude":-121.95026,"precision":"Zip9","time_zone":"Pacific","utc_offset":-8,"dst":true},"analysis":{"dpv_match_code":"Y","dpv_footnotes":"AABB","dpv_cmra":"N","dpv_vacant":"N","dpv_no_stat":"N","active":"Y"}}]');
+        response.setStatusCode(200);
+        return response; 
+    }
+
+}
+-------------------------------------------------------------------------------------------------------------------------
+@isTest
+public class Batch_US_test_class {
+    @isTest 
+    static void testPostCallout() {
+        List<Event_Location__c> EvtList = new List<Event_Location__c>();
+        
+        
+            EvtList.add(new Event_Location__c(Event_Name__c = 'Test Account ', Street__c ='142 Park Rd',City__c='Pittsford',State__c='NY',Zip_Code__c='14534'));
+        
+     		insert EvtList;
+        Test.setMock(HttpCalloutMock.class, new Batch_US_fakeResponse());
+        
+        Batch_USadd batch = new Batch_USadd();
+         Test.startTest();
+		Database.executeBatch(batch, 1);
+        Test.stopTest();
+        
+        
+    }
+}
