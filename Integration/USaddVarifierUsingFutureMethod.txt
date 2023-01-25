@@ -1,0 +1,64 @@
+/**
+ * @description       : 
+ * @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+ * @group             : 
+ * @last modified on  : 11-09-2022
+ * @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+**/
+public with sharing class locationTrigggerHandler {
+    
+    @future(callout=true)
+    public static void method(string Evtid) 
+    {
+        Event_Location__c evt = [SELECT Id, Name, Event_Name__c, Street__c, City__c, State__c, 
+                                    Zip_Code__c, Varified__c, Varification_comment__c FROM Event_Location__c
+                                    Where id =: Evtid];
+        
+        http http = new http();
+        HttpRequest request = new HttpRequest();
+        string endPoint = 'https://us-street.api.smartystreets.com/street-address?auth-id=8456a135-a33b-fad2-7d16-36194898eec2&auth-token=RNptEKzzcpYsOAoFMcrW';
+        endPoint += '&street='+EncodingUtil.urlEncode(evt.Street__c, 'UTF-8')
+                 +'&city='+EncodingUtil.urlEncode(evt.City__c, 'UTF-8')
+                 +'&state='+EncodingUtil.urlEncode(evt.State__c, 'UTF-8')
+                 +'&zipcode='+EncodingUtil.urlEncode(evt.Zip_Code__c, 'UTF-8')
+                 +'&candidates=10&match=invalid';
+        system.debug('endPoint url is > '+endPoint);
+        request.setEndpoint(endpoint);
+        request.setMethod('GET');
+        HttpResponse response = new HttpResponse();
+        try {
+            string result = response.getBody();
+            integer code = response.getStatusCode();
+            string status ;
+            string footnote ;
+            System.JSONParser Jp = Json.createParser(result);
+            while (Jp.nextToken() != Null){
+                if (Jp.getText() == 'dpv_match_code'){
+                    Jp.nextToken();
+                    status = (string) Jp.getText();
+                   system.debug(status);
+                }
+                if (Jp.getText() == 'dpv_footnotes'){
+                    Jp.nextToken();
+                    footnote = (string) Jp.getText();
+                   system.debug(footnote);
+                }
+            }
+            
+            if( status == 'Y'){
+               evt.Varified__c = true;
+               evt.Varification_comment__c = footnote;
+                system.debug('status');
+            //cod = code; 
+            }else{
+                 evt.Varified__c = false;
+            }
+          update evt;      
+            
+        }catch(System.CalloutException ex) {
+            System.debug(' Exception Executed '+ex.getStackTraceString());
+            System.debug(' Exception Executed '+ex.getMessage());
+        }
+        
+    }
+}
