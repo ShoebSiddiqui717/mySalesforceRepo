@@ -1,0 +1,128 @@
+@RestResource(urlMapping='/Orderss/*')
+///services/apexrest/Orderss
+global with sharing class int_ass_V {
+    @HttpGet
+    global static List<OrderItemResponse> getOrderItemByOrderId(){
+        RestRequest request = RestContext.request;
+        
+        string orderId = request.requestURI.substring(
+            request.requestURI.lastIndexOf('/')+1);
+        
+        //lstWrapper = new List<customWrapper> ();
+        list<OrderItemResponse> OrderItemInfo = new list<OrderItemResponse>();
+        List<OrderItem__c> Result = [SELECT Id, Name,Order__r.Contact_Person__c, Order__c , Product_Code__c, Product_Quantity__c, Product_Price__c FROM OrderItem__c WHERE Order__c =: orderId];
+        for(OrderItem__c eO : Result){
+            OrderItemResponse eOrderItem = new OrderItemResponse(eO);
+            OrderItemInfo.add(eOrderItem);
+        }
+        return OrderItemInfo;
+    }
+    
+    @HttpPost
+    global static SystemResponse createOrderAndOrderItem(){
+        RestRequest req = RestContext.request;
+        Map<String, Object> receivedData = (Map<String, Object>)JSON.deserializeUntyped(req.requestBody.toString());
+        OrderItem__c  orderItem = new  OrderItem__c ();
+        List<OrderItem__c> orderItemRecs = new List<OrderItem__c>();
+        
+        if(receivedData.containsKey('OrderItem')){
+            List<Object> orderItemRecords = (List<Object>)receivedData.get('OrderItem');
+            if(orderItemRecords !=null && orderItemRecords.size()>0)
+            {
+                for(Object obj : orderItemRecords)
+                {
+                    Map<String,Object> objMap = (Map<String,Object>)obj;
+                    String OrdeItemName = (String)objMap.get('OrdeItemName');
+                    Integer Quantity = Integer.valueof(objMap.get('Quantity'));
+                    Integer PriceForOne = Integer.valueof(objMap.get('PriceForOne'));
+                    
+                    OrderItem__c OrderItemRec  = new OrderItem__c();
+                    OrderItemRec.put('Name',OrdeItemName);
+                    OrderItemRec.put('Product_Price__c',PriceForOne*Quantity);
+                    OrderItemRec.put('Product_Quantity__c',Quantity);
+                    orderItemRecs.add(OrderItemRec);
+                }
+            }
+            
+        }
+        
+        Order__c orderRecord = new Order__c();
+        
+        String Name = receivedData.get('Name').ToString();
+        if(Name != '') {
+            orderRecord.Contact_Person__c = Name;
+        }
+         try{
+              insert orderRecord;
+              for(OrderItem__c oi : orderItemRecs){
+                    oi.Order__c = orderRecord.Id;
+                }if(orderRecord != null){
+                     Insert orderItemRecs;
+                }
+                
+            SystemResponse responseRecord = new SystemResponse('200','Success',orderRecord.Id);
+            return responseRecord;
+          }
+        catch (Exception e) {
+            SystemResponse responseRecord = new SystemResponse('error',e.getMessage(),'');
+            return responseRecord;         
+        }
+        
+        
+    } 
+    
+    global class SystemResponse{
+        
+        global String Status;
+        global String Message;
+        global String OrderID;
+        global SystemResponse(String status,String message,String OrderID){
+            this.Status = status;
+            this.Message = message;
+            this.OrderID = OrderID;
+            }
+    }
+    
+    global List<OrderItemResponse> OrderItemInfo;
+    global class OrderItemResponse{
+        
+        
+        global decimal Quantity;
+        global decimal TotalPrice;
+        global String Name;
+        global String OrderName;
+        global OrderItemResponse(OrderItem__c orderItemRecs){
+            this.Name = orderItemRecs.Name;
+            this.OrderName = orderItemRecs.Order__r.Contact_Person__c;
+            this.Quantity = orderItemRecs.Product_Quantity__c;
+            this.TotalPrice = orderItemRecs.Product_Price__c;
+            }
+    }
+    
+   /*{
+   "Name":"S Veru",
+   "OrderItem":
+   [
+      {
+         "OrdeItemName":"ABC",
+         "Quantity":"12",
+         "PriceForOne":"10"
+      },
+      {
+         "OrdeItemName":"DEF",
+         "Quantity":"15",
+         "PriceForOne":"100"
+      },
+	  {
+         "OrdeItemName":"GHI",
+         "Quantity":"135",
+         "PriceForOne":"100"
+      },
+	  {
+         "OrdeItemName":"LMN",
+         "Quantity":"75",
+         "PriceForOne":"100"
+      }
+   ]
+   }*/
+}
