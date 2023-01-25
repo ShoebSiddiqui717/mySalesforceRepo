@@ -1,0 +1,36 @@
+global class Integration_inr_aed_batch implements Database.Batchable<Sobject>,Database.AllowsCallouts
+{
+    global DataBase.QueryLocator start (Database.BatchableContext bc ) {
+        string query = 'select id ,AmountAED__c, amount from opportunity';
+        return Database.getQueryLocator(query);
+    }
+    global void execute (DataBase.BatchableContext bc, List<opportunity> opp){
+        http CC = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint('http://api.currencylayer.com/live?access_key=b3c13e7fdaf2a01f4f68bfdf8065bcf4&source=USD&currencies=AED&format=1');
+        req.setMethod('GET');
+        
+        HttpResponse resp = CC.send(req);
+        string result = resp.getBody();
+        
+        Decimal amtAED ;
+        System.JSONParser Jp = Json.createParser(result);
+        while (Jp.nextToken() != Null){
+            if (Jp.getText() == 'USDAED'){
+               	Jp.nextToken();
+                amtAED = (Decimal) Jp.getDecimalValue();
+            }
+        }
+        system.debug('from currency Layer '+amtAED);
+        for (opportunity eOpp : opp){
+            if(eOpp.amount != null){
+               eOpp.AmountAED__c = (eOpp.Amount*amtAED)+' AED'; 
+               system.debug('converted Amount '+eOpp.AmountAED__c);
+            }
+        }
+        update opp;
+    }
+    global void finish (DataBase.BatchableContext bc){
+        system.debug('Batch is Finished');
+    }
+}
